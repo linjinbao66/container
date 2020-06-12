@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>开始使用layui</title>
+    <link th:href="@{/css/layui.css}" rel="stylesheet" type="text/css">
+    <script th:src="@{/layui.js}"></script>
+</head>
+<body>
+
+<!-- 你的HTML代码 -->
+
+<script>
+layui.use(['layer', 'form'], function(){
+  var layer = layui.layer
+  ,form = layui.form;
+
+  layer.msg('Hello World');
+});
+</script>
+</body>
+</html>
