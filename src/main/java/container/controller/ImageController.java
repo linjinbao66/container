@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,13 +22,21 @@ public class ImageController {
     @Autowired
     private ImageService imageService;
 
+    /**
+     * 查询镜像列表
+     * @return
+     */
     @GetMapping("/image")
     @ResponseStatus(HttpStatus.OK)
     public String image(){
         return imageService.getAllImages();
     }
 
-
+    /**
+     * 根据镜像id查询镜像详情
+     * @param imageId
+     * @return
+     */
     @GetMapping("/image/{imageId}")
     @ResponseStatus(HttpStatus.OK)
     public String image(@PathVariable("imageId")String imageId){
@@ -35,6 +44,13 @@ public class ImageController {
         return imageService.getByImageId(imageId);
     }
 
+    /***
+     * 服务器根据指令去仓库下载镜像
+     * @param imgName
+     * @param tag
+     * @return
+     * @throws InterruptedException
+     */
     @PostMapping("/image")
     @ResponseStatus(HttpStatus.CREATED)
     public String pullImage(@RequestParam(value = "imgName", required = true)String imgName,
@@ -43,6 +59,30 @@ public class ImageController {
         return imageService.pullImage(imgName,tag);
     }
 
+    /**
+     * 上传导出的镜像tar包，服务器 docker load
+     * 单文件上传
+     * @return
+     */
+    @PostMapping("/image/upload")
+    @ResponseStatus(HttpStatus.OK)
+    public String loadImage(@RequestParam(value = "file", required = true) MultipartFile file) throws IOException {
+        if(file==null) return "上传失败，请选择文件";
+        String fileName = file.getOriginalFilename();
+        LOG.info("fileName = " + fileName);
+        InputStream inputStream = file.getInputStream();
+        return imageService.loadImage(inputStream);
+    }
+
+    /**
+     * 镜像导出并下载
+     * @param imageName
+     * @param tag
+     * @param outFile
+     * @param response
+     * @return
+     * @throws UnsupportedEncodingException
+     */
     @GetMapping("/image/{imageName}/tag")
     @ResponseStatus(HttpStatus.CREATED)
     public String saveImage(@PathVariable(value = "imageName")String imageName,

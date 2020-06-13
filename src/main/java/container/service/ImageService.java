@@ -68,11 +68,29 @@ public class ImageService {
         return is;
     }
 
-    public String loadImage(File imageFile) throws FileNotFoundException {
+    /**
+     * 导入镜像的tar包
+     * @param imageStream
+     * @return
+     */
+    public String loadImage(InputStream imageStream) {
         DockerClient dockerClient = client.getDockerClient();
-        InputStream imageStream = new FileInputStream(imageFile);
         LoadImageCmd loadImageCmd = dockerClient.loadImageCmd(imageStream);
-        loadImageCmd.exec();
+        try {
+            loadImageCmd.exec();
+            return "导入成功";
+        }catch (Exception e){
+            return "导入失败" + e.getMessage();
+        }
+    }
+
+    /**
+     *
+     * @return
+     */
+    public String buildImage(){
+        DockerClient dockerClient = client.getDockerClient();
+        dockerClient.buildImageCmd();
         return null;
     }
 }

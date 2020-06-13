@@ -18,7 +18,9 @@ import com.google.gson.Gson;
 import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 public class TestConnect {
@@ -32,7 +34,21 @@ public class TestConnect {
         DockerClient dockerClient = DockerClientBuilder
                 .getInstance(config)
                 .build();
-        saveImage(dockerClient);
+
+        File file = new File("D:\\ssh\\Dockerfile");
+        File file2 = new File("D:\\ssh\\zipkin-server-2.12.9-exec.jar");
+        Set<String> tags = new HashSet<>();
+        tags.add("test:v4");
+        InputStream inputStream = new FileInputStream(file2);
+        String imageId = dockerClient.buildImageCmd()
+                .withTags(tags)
+                .withPull(true)
+                .withDockerfile(file)
+                .withNoCache(false)
+                .withTarInputStream(inputStream)
+                .start()
+                .awaitImageId();
+                
         return;
     }
 
