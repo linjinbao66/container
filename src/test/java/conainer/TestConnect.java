@@ -15,9 +15,7 @@ import com.github.dockerjava.jaxrs.JerseyDockerHttpClient;
 import com.github.dockerjava.transport.DockerHttpClient;
 import com.google.gson.Gson;
 
-import java.io.Closeable;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -25,7 +23,7 @@ import java.util.concurrent.TimeUnit;
 
 public class TestConnect {
 
-    public static void main(String[] args) throws URISyntaxException, InterruptedException {
+    public static void main(String[] args) throws URISyntaxException, InterruptedException, IOException {
         Gson gson = new Gson();
         DockerClientConfig config = DefaultDockerClientConfig.createDefaultConfigBuilder()
                 .withDockerHost("tcp://192.168.43.128:2375")
@@ -34,15 +32,22 @@ public class TestConnect {
         DockerClient dockerClient = DockerClientBuilder
                 .getInstance(config)
                 .build();
+        saveImage(dockerClient);
+        return;
+    }
 
-        dockerClient.pullImageCmd("tomcat")
-                .withTag("latest")
-                .exec(new PullImageResultCallback() {
-
-                })
-                .awaitCompletion(300, TimeUnit.SECONDS);
-
-
+    private static void saveImage(DockerClient dockerClient) throws IOException {
+        SaveImageCmd busybox = dockerClient.saveImageCmd("tomcat:8.5");
+        InputStream is = busybox.exec();
+        File file = new File("D:\\aaa.tar");
+        FileOutputStream fou = new FileOutputStream(file);
+        byte[] buffer = new byte[1024];
+        int length = 0;
+        while((length= is.read(buffer))>0){
+            fou.write(buffer, 0, length);
+        }
+        is.close();
+        fou.close();
     }
 
     /**
