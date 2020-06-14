@@ -45,7 +45,6 @@ public class TestConnect {
                 .withPull(true)
                 .withDockerfile(file)
                 .withNoCache(false)
-                .withTarInputStream(inputStream)
                 .start()
                 .awaitImageId();
                 
