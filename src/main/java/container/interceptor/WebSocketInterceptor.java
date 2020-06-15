@@ -15,14 +15,11 @@ public class WebSocketInterceptor implements HandshakeInterceptor {
     public boolean beforeHandshake(ServerHttpRequest serverHttpRequest, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
         if (serverHttpRequest instanceof ServletServerHttpRequest) {
             ServletServerHttpRequest request = (ServletServerHttpRequest) serverHttpRequest;
-            //生成一个UUID
             String uuid = UUID.randomUUID().toString().replace("-","");
-            //将uuid放到websocketsession中
             attributes.put(Constant.USER_UUID_KEY, uuid);
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 
     @Override

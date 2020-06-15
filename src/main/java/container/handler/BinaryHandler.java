@@ -2,6 +2,7 @@ package container.handler;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 import org.springframework.web.socket.*;
 import org.springframework.web.socket.handler.BinaryWebSocketHandler;
 
@@ -12,6 +13,7 @@ import java.io.*;
  * @date 2020/6/7
  * 处理文件socket
  */
+@Component
 public class BinaryHandler extends BinaryWebSocketHandler {
     private static final Logger LOG = LoggerFactory.getLogger(BinaryHandler.class);
     private static String filePath = "E:\\tmp";
