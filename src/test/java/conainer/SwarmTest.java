@@ -1,13 +1,15 @@
 package conainer;
 
 import com.github.dockerjava.api.DockerClient;
-import com.github.dockerjava.api.model.ExposedPort;
-import com.github.dockerjava.api.model.ServiceSpec;
-import com.github.dockerjava.api.model.SwarmSpec;
+import com.github.dockerjava.api.command.InspectSwarmCmd;
+import com.github.dockerjava.api.command.ListSwarmNodesCmd;
+import com.github.dockerjava.api.model.*;
 import com.github.dockerjava.core.DefaultDockerClientConfig;
 import com.github.dockerjava.core.DockerClientBuilder;
 import com.github.dockerjava.core.DockerClientConfig;
 import com.google.gson.Gson;
+
+import java.util.List;
 
 public class SwarmTest {
 
@@ -20,9 +22,16 @@ public class SwarmTest {
         DockerClient dockerClient = DockerClientBuilder
                 .getInstance(config)
                 .build();
-        dockerClient.createServiceCmd(new ServiceSpec()
 
-        ).exec();
+        InspectSwarmCmd inspectSwarmCmd = dockerClient.inspectSwarmCmd();
+        Swarm exec = inspectSwarmCmd.exec();
 
+    }
+
+    private static void getNodes(Gson gson, DockerClient dockerClient) {
+        ListSwarmNodesCmd listSwarmNodesCmd = dockerClient.listSwarmNodesCmd();
+        List<SwarmNode> exec = listSwarmNodesCmd.exec();
+
+        System.out.println(gson.toJson(exec));
     }
 }
