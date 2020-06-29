@@ -24,12 +24,14 @@ public class ImageServiceImpl implements ImageService {
     private Client client;
     @Autowired
     private Gson gson;
+
+
     @Override
-    public String getAllImages(){
+    public List<Image> getAllImages(){
         DockerClient dockerClient = client.getDockerClient();
         ListImagesCmd listImagesCmd = dockerClient.listImagesCmd();
         List<Image> exec = listImagesCmd.exec();
-        return gson.toJson(exec);
+        return exec;
     }
 
     @Override

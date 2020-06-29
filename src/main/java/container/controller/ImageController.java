@@ -1,6 +1,7 @@
 package container.controller;
 
 import container.service.ImageService;
+import container.util.MesssageWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,9 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 public class ImageController {
@@ -24,8 +28,9 @@ public class ImageController {
      */
     @GetMapping("/image")
     @ResponseStatus(HttpStatus.OK)
-    public String image(){
-        return imageService.getAllImages();
+    public MesssageWrapper image(){
+        List list = imageService.getAllImages();
+        return new MesssageWrapper(0, null, list.size(), list);
     }
 
     /**
