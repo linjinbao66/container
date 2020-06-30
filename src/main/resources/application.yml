@@ -18,4 +18,13 @@ spring:
     username: root
     password: 369369
     driver-class-name: com.mysql.jdbc.Driver
-
+  redis:
+    database: 0
+    host: 192.168.43.128
+    port: 6379
+    password:
+    lettuce:
+      pool:
+        max-active: -1
+        max-idle: 8
+        min-idle: 1
