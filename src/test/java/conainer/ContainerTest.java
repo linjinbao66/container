@@ -1,20 +1,16 @@
 package conainer;
 
 import com.github.dockerjava.api.DockerClient;
-import com.github.dockerjava.api.command.CreateContainerCmd;
-import com.github.dockerjava.api.command.CreateContainerResponse;
-import com.github.dockerjava.api.command.ListContainersCmd;
-import com.github.dockerjava.api.command.StartContainerCmd;
-import com.github.dockerjava.api.model.Container;
-import com.github.dockerjava.api.model.ContainerConfig;
-import com.github.dockerjava.api.model.ExposedPort;
-import com.github.dockerjava.api.model.Ports;
+import com.github.dockerjava.api.async.ResultCallback;
+import com.github.dockerjava.api.command.*;
+import com.github.dockerjava.api.model.*;
 import com.github.dockerjava.core.DefaultDockerClientConfig;
 import com.github.dockerjava.core.DockerClientBuilder;
 import com.github.dockerjava.core.DockerClientConfig;
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,9 +26,12 @@ public class ContainerTest {
         DockerClient dockerClient = DockerClientBuilder
                 .getInstance(config)
                 .build();
+        InputStream tarInputStream = null;
+        BuildImageCmd buildImageCmd = dockerClient.buildImageCmd(tarInputStream);
+        ResultCallback<BuildResponseItem> resultCallback = null;
+        buildImageCmd.exec(resultCallback);
 
-        ExposedPort[] exposedPorts = dockerClient.inspectImageCmd("014516db4bff").exec().getConfig().getExposedPorts();
-        System.out.println(gson.toJson(exposedPorts));
+
     }
 
     private static void createContainer2(Gson gson, DockerClient dockerClient) {
